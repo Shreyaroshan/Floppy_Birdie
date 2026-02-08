@@ -24,6 +24,35 @@ public class bird_script : MonoBehaviour
             // Apply the flap strength to the bird's rigidbody
             Flap();
         }
+
+        // Check if bird is out of screen bounds
+        CheckBirdBounds();
+    }
+
+    void CheckBirdBounds()
+    {
+        // Get the bird's position in world space
+        Vector3 birdPosition = transform.position;
+
+        // Get the camera's view frustum bounds
+        float cameraHeight = Camera.main.orthographicSize * 2;
+        float cameraWidth = cameraHeight * Camera.main.aspect;
+
+        float cameraLeft = Camera.main.transform.position.x - cameraWidth / 2;
+        float cameraRight = Camera.main.transform.position.x + cameraWidth / 2;
+        float cameraBottom = Camera.main.transform.position.y - cameraHeight / 2;
+        float cameraTop = Camera.main.transform.position.y + cameraHeight / 2;
+
+        // Check if bird is outside the screen bounds
+        if (birdPosition.x < cameraLeft || birdPosition.x > cameraRight ||
+            birdPosition.y < cameraBottom || birdPosition.y > cameraTop)
+        {
+            if (birdIsAlive)
+            {
+                logic.GameOver();
+                birdIsAlive = false;
+            }
+        }
     }
     void Flap()
     {
